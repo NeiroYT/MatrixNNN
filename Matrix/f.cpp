@@ -1,5 +1,26 @@
 #include "f.h"
 
+// Matrix basic functions (not operators)
+template<typename T>
+Matrix<T>::Matrix(const Matrix<T> &c) {
+	width = c.width;
+	height = c.lines;
+	right_part = c.right_part;
+	autozero = c.autozero;
+	//holds = c.holds;
+	issolved = c.issolved;
+	solved = new bool[right_part];
+	main = new vector<T>[height];
+	isready = new bool[height];
+	for (size_t i = 0; i < right_part; i++) {
+		solved[i] = c.solved[i];
+	}
+	for (size_t i = 0; i < height; i++) {
+		addline(&c.main[i][0]);
+		isready[i] = c.isready[i];
+	}
+}
+
 template<typename T>
 bool Matrix<T>::swap(size_t l1, size_t l2) {
 	T buf;
@@ -18,7 +39,7 @@ bool Matrix<T>::swap(size_t l1, size_t l2) {
 template<typename T>
 T Matrix<T>::Determinator() {
 	if (width - right_part != height || !issolved) {
-		return NAN;
+		return 0;
 	}
 	for (size_t i = 0; i < width - right_part; i++) {
 		if (searchforxline(i) == -1) {
@@ -49,6 +70,7 @@ void Matrix<T>::addline(T *arr) {
 
 template<typename T>
 void Matrix<T>::show() {
+	//return;
 	size_t i;
 	for (i = 0; i < lines; i++) {
 		cout << "(";
@@ -78,11 +100,12 @@ void Matrix<T>::show() {
 template<typename T>
 int Matrix<T>::searchforxline(size_t num) {
 	size_t i;
-	bool bad = 0;
+	bool bad;
 	if (num > width - right_part) {
 		return -1;
 	}
 	for (i = 0; i < height; i++) {
+		bad = 0;
 		if (main[i][num] != 0) {
 			for (size_t j = 0; j < num; j++) {
 				if (main[i][j] != 0) {
@@ -99,7 +122,7 @@ int Matrix<T>::searchforxline(size_t num) {
 }
 
 template<typename T>
-void Matrix<T>::startsolve() {
+void Matrix<T>::startsolve(bool jord) {
 	bool *isready = new bool[height];
 	bool errcheck;
 	if (!full) {
@@ -114,13 +137,13 @@ void Matrix<T>::startsolve() {
 			if (!isready[q] && elem) {
 				errcheck = division(q + 1, elem);
 				holds *= elem;
-				for (size_t t = 0; t < height; t++) {
+				for (size_t t = q*(!jord); t < height; t++) {
 					if (t != q) {
 						T coef1 = -main[t][p];
 						errcheck = errcheck || summarize(q + 1, t + 1, coef1);
 					}
 				}
-				//show();
+				//show(); // debug
 				isready[q] = 1;
 				if (errcheck) {
 					cout << "Bad error!\n";
@@ -131,6 +154,7 @@ void Matrix<T>::startsolve() {
 	}
 	show();
 	cout << '\n';
+	issolved = 1;
 	for (size_t i = 0; i < right_part; i++) {
 		solved[i] = !checkzeroerror(i + 1);
 		showfx(i + 1);
@@ -142,7 +166,6 @@ void Matrix<T>::startsolve() {
 			swap(tline, i);
 		}
 	}
-	issolved = 1;
 }
 
 template<typename T>
@@ -198,6 +221,7 @@ bool Matrix<T>::summarize(size_t from, size_t to, T coef) {
 
 template<typename T>
 void Matrix<T>::showfx(size_t rpart) {
+	//return;
 	bool first;
 	bool empty;
 	size_t xl;
@@ -241,6 +265,7 @@ void Matrix<T>::showfx(size_t rpart) {
 		}
 		cout << '\n';
 	}
+	cout << "Determinator: " << Determinator() << '\n';
 }
 
 void sgndprint(size_t first, size_t sgn) {
