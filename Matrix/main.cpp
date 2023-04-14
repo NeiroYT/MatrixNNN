@@ -25,7 +25,11 @@ int main() {
 			m1.addline(templine);
 		}
 		delete[] templine;
+		Matrix<double> m2 = m1;
+		m2 = (m1 + m2) * 2;
 		m1.show();
+		cout << "\n...\n";
+		m2.show();
 		cout << "Confirm? (Y/N)\n";
 		cin >> choice;
 		if (choice != 'Y' && choice != 'y') {
@@ -34,8 +38,10 @@ int main() {
 		cout << "\nAnswers:\n";
 		time = clock();
 		m1.startsolve();
-		//m1.startsolve();
-		cout << "Determinator: " << m1.Determinator() << '\n';
+		time = clock() - time;
+		cout << time << "ms for " << w << "x" << h << '\n';
+		time = clock();
+		m2.startsolve();
 		time = clock() - time;
 		cout << time << "ms for " << w << "x" << h << '\n';
 	}

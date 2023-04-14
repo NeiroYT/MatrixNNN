@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <vector>
 #include <ctime>
+#include <iomanip>
 
 using namespace std;
 
@@ -29,9 +30,10 @@ public:
 			autozero = 1;
 		}
 		solved = new bool[this->right_part];
-		main = new vector<T>[h];
+		main = new vector<T>[height];
 		isready = new bool[height];
 	}
+	Matrix(const Matrix &c);
 	~Matrix() {
 		delete[] isready;
 		delete[] main;
@@ -40,11 +42,15 @@ public:
 	bool swap(size_t l1, size_t l2);
 	void addline(T *arr);
 	void show();
-	void startsolve();
+	void startsolve(bool jord = 1);
 	bool checkzeroerror(size_t rpart);
 	bool summarize(size_t from, size_t to, T coef);
 	bool division(size_t to, T coef);
 	T Determinator();
+	//ops
+	Matrix<T> operator+(const Matrix &sec);
+	Matrix<T>& operator=(const Matrix<T> &sec);
+	Matrix<T> operator*(const T& coef);
 private:
 	void showfx(size_t rpart);
 	int searchforxline(size_t num);
@@ -61,3 +67,4 @@ private:
 };
 
 #include "f.cpp"
+#include "operators.cpp"
