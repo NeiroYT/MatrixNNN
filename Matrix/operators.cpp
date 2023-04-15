@@ -23,8 +23,8 @@ template<typename T>
 Matrix<T> Matrix<T>::operator*(const T& coef) {
 	Matrix<T> res(0, 0);
 	res = *this;
-	for (int i = 0; i < res.height; i++) {
-		for (int j = 0; j < res.width; j++) {
+	for (size_t i = 0; i < res.height; i++) {
+		for (size_t j = 0; j < res.width; j++) {
 			res.main[i][j] *= coef;
 		}
 	}
@@ -32,20 +32,27 @@ Matrix<T> Matrix<T>::operator*(const T& coef) {
 }
 
 template<typename T>
-Matrix<T> Matrix<T>::operator*(const Matrix<T> &sec) {
-	if (width-right_part != sec.lines) {
+Matrix<T> Matrix<T>::operator*(Matrix<T> &sec) {
+	Matrix<T> *anoth;
+	Matrix<T> thr(sec.width - sec.right_part, sec.width - sec.right_part, 0, 1);
+	anoth = this;
+	if ((width - right_part) == 1 && height == 1) {
+		thr = thr * main[0][0];
+		anoth = &thr;
+	}
+	if (anoth->width-anoth->right_part != sec.lines) {
 		return *this;
 	}
 	size_t cols = sec.width - sec.right_part;
-	Matrix<T> res(height, cols);
-	res.holds = holds * sec.holds;
+	Matrix<T> res(anoth->height, cols);
+	res.holds = anoth->holds * sec.holds;
 	T *line = new T[cols];
 	T sum;
-	for (size_t i = 0; i < height; i++) {
+	for (size_t i = 0; i < anoth->height; i++) {
 		for (size_t j = 0; j < cols; j++) {
 			sum = 0;
 			for (size_t k = 0; k < sec.lines; k++) {
-				sum += main[i][k] * sec.main[k][j];
+				sum += anoth->main[i][k] * sec.main[k][j];
 			}
 			line[j] = sum;
 		}
@@ -85,4 +92,46 @@ Matrix<T> &Matrix<T>::operator=(const Matrix<T> &sec) {
 		isready[i] = sec.isready[i];
 	}
 	return *this;
+}
+
+template<typename T>
+Matrix<T> Matrix<T>::operator/(Matrix<T> &sec) {
+	if (sec.width - sec.right_part != sec.lines) {
+		return *this;
+	}
+	Matrix<T> resolv(2*sec.lines, sec.lines, sec.lines);
+	Matrix<T> res(sec.lines, sec.lines, 0);
+	T *line = new T[resolv.width];
+	for (size_t i = 0; i < resolv.height; i++) {
+		for (size_t j = 0; j < sec.lines; j++) {
+			line[j] = sec.main[i][j];
+		}
+		for (size_t j = sec.lines; j < resolv.width; j++) {
+			line[j] = j == (i + sec.lines) ? 1 : 0;
+		}
+		resolv.addline(line);
+	}
+	resolv.startsolve(1, 1);
+	if (resolv.Determinator() != 0) {
+		for (size_t i = 0; i < sec.lines; i++) {
+			for (size_t j = 0; j < sec.lines; j++) {
+				line[j] = resolv.main[i][j + sec.lines];
+			}
+			res.addline(line);
+		}
+		delete[] line;
+		return *this * res;
+	}
+	else {
+		delete[] line;
+		return *this;
+	}
+}
+
+template<typename T>
+vector<T>& Matrix<T>::operator[](size_t index) {
+	if (index > height) {
+		return main[height-1];
+	}
+	return main[index];
 }

@@ -42,6 +42,12 @@ Matrix<T>::Matrix(size_t w, size_t h, size_t right_part, bool one) {
 }
 
 template<typename T>
+Matrix<T>::Matrix(T num) {
+	Matrix<T> tocopy(1, 1, 0, 1);
+	*this = tocopy * num;
+}
+
+template<typename T>
 Matrix<T>::Matrix(const Matrix<T> &c) {
 	width = c.width;
 	height = c.lines;
@@ -64,6 +70,9 @@ Matrix<T>::Matrix(const Matrix<T> &c) {
 template<typename T>
 bool Matrix<T>::swap(size_t l1, size_t l2) {
 	T buf;
+	if (l1 == l2) {
+		return 0;
+	}
 	if (l1 >= lines || l2 >= lines) {
 		return 1;
 	}
@@ -108,32 +117,32 @@ void Matrix<T>::addline(T *arr) {
 }
 
 template<typename T>
-void Matrix<T>::show() {
-	//return;
+void Matrix<T>::show(ostream& output) {
 	size_t i;
 	for (i = 0; i < lines; i++) {
-		cout << "(";
+		output << "(";
 		for (size_t j = 0; j < width; j++) {
 			T elem = main[i][j];
 			if (elem == 0) {
-				cout << "0";
+				output << "0";
 			}
 			else {
-				cout << elem;
+				output << elem;
 			}
 			if (j == width - right_part - 1) {
-				cout << " |";
+				output << " |";
 			}
 			if (j < width - 1) {
-				cout << " ";
+				output << " ";
 			}
 		}
-		cout << ")\n";
+		output << ")\n";
 	}
 	while (i < height) {
-		cout << "(...)\n";
+		output << "(...)\n";
 		i++;
 	}
+	output.flush();
 }
 
 template<typename T>
@@ -161,7 +170,7 @@ int Matrix<T>::searchforxline(size_t num) {
 }
 
 template<typename T>
-void Matrix<T>::startsolve(bool jord) {
+void Matrix<T>::startsolve(bool jord, bool quiet, ostream& output) {
 	bool *isready = new bool[height];
 	bool errcheck;
 	if (!full) {
@@ -182,10 +191,10 @@ void Matrix<T>::startsolve(bool jord) {
 						errcheck = errcheck || summarize(q + 1, t + 1, coef1);
 					}
 				}
-				//show(); // debug
+				//show(output); // debug
 				isready[q] = 1;
 				if (errcheck) {
-					cout << "Bad error!\n";
+					output << "Bad error!\n";
 					return;
 				}
 			}
@@ -198,15 +207,18 @@ void Matrix<T>::startsolve(bool jord) {
 			swap(tline, i);
 		}
 	}
-	show();
-	cout << '\n';
+	if (!quiet) {
+		show(output);
+	}
 	issolved = 1;
 	for (size_t i = 0; i < right_part; i++) {
 		solved[i] = !checkzeroerror(i + 1);
 		if (solved[i] == 0) {
 			issolved = 0;
 		}
-		showfx(i + 1);
+		if (!quiet) {
+			showfx(i + 1, output);
+		}
 	}
 }
 
@@ -262,21 +274,21 @@ bool Matrix<T>::summarize(size_t from, size_t to, T coef) {
 }
 
 template<typename T>
-void Matrix<T>::showfx(size_t rpart) {
+void Matrix<T>::showfx(size_t rpart, ostream& output) {
 	//return;
 	bool first;
 	bool empty;
 	size_t xl;
-	cout << "--- #" << rpart << " ---\n";
+	output << "--- #" << rpart << " ---\n";
 	if (!solved[rpart - 1]) {
-		cout << "Not solved.\n";
+		output << "Not solved.\n";
 		return;
 	}
 	for (size_t i = 0; i < width - right_part; i++) {
 		empty = 1;
 		first = 1;
 		xl = searchforxline(i);
-		cout << "x" << i + 1 << " = ";
+		output << "x" << i + 1 << " = ";
 		if (xl != -1) {
 			for (size_t j = i + 1; j < width; j++) {
 				bool sgn;
@@ -288,37 +300,38 @@ void Matrix<T>::showfx(size_t rpart) {
 				}
 				sgn = main[xl][j] > 0 ? 1 : 0;
 				if (j == width - right_part + rpart - 1) { // our rpart
-					sgndprint(first, sgn);
-					cout << (2 * sgn - 1) * main[xl][j];
+					sgndprint(first, sgn, output);
+					output << (2 * sgn - 1) * main[xl][j];
 				}
 				else {
-					sgndprint(first, !sgn);
-					cout << (2 * sgn - 1) * main[xl][j] << "x" << j + 1;
+					sgndprint(first, !sgn, output);
+					output << (2 * sgn - 1) * main[xl][j] << "x" << j + 1;
 				}
 				first = 0;
 			}
 		}
 		else {
-			cout << "const";
+			output << "const";
 			empty = 0;
 		}
 		if (empty) {
-			cout << '0';
+			output << '0';
 		}
-		cout << '\n';
+		output << '\n';
 	}
-	cout << "Determinator: " << Determinator() << '\n';
+	output << "Determinator: " << Determinator() << '\n';
+	output.flush();
 }
 
-void sgndprint(size_t first, size_t sgn) {
+void sgndprint(size_t first, size_t sgn, ostream& output) {
 	if (first && !sgn) {
-		cout << "-";
+		output << "-";
 	}
 	else if (!first && sgn) {
-		cout << " + ";
+		output << " + ";
 	}
 	else if (!first && !sgn) {
-		cout << " - ";
+		output << " - ";
 	}
 }
 
