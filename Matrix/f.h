@@ -73,5 +73,10 @@ ostream& operator<<(ostream &output, Matrix<T> &m) {
 	return output;
 }
 
+template<typename T>
+inline Matrix<T> operator/(T frst, Matrix<T> sec) {
+	return (Matrix<T>)frst / sec;
+}
+
 #include "f.cpp"
 #include "operators.cpp"

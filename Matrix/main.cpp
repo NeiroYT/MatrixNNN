@@ -1,4 +1,5 @@
 #include "f.h"
+#include "optional.h"
 
 int main() {
 	srand(time(NULL));
@@ -15,21 +16,23 @@ int main() {
 		cout << "Count of right parts: ";
 		cin >> rpart;
 		w += rpart;
-		Matrix<double> m1(w, h, rpart);
-		double *templine = new double[w];
-		for (int i = 0; i < h; i++) {
+		Matrix<Frac> m1(w, h, rpart);
+		Frac *templine = new Frac[w];
+		int a;
+		for (size_t i = 0; i < h; i++) {
 			cout << "Line #" << i + 1 << ":\n";
-			for (int j = 0; j < w; j++) {
+			for (size_t j = 0; j < w; j++) {
 				templine[j] = rand() % 10;
-				//cin >> templine[j];
+				//cin >> a;
+				//templine[j] = a;
 			}
 			cout << "---\n";
 			m1.addline(templine);
 		}
 		delete[] templine;
-		Matrix<double> m2(w, h, rpart, 1);
-		m2 = ((Matrix<double>)1 / m1);
-		m1.show(file);s
+		Matrix<Frac> m2(w, h, rpart, 1);
+		m2 = ((Frac)1 / m1);
+		m1.show(file);
 		file << "\n...\n";
 		m2.show(file);
 		cout << "Confirm? (Y/N)\n";

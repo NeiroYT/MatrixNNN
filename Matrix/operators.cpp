@@ -112,7 +112,7 @@ Matrix<T> Matrix<T>::operator/(Matrix<T> &sec) {
 		resolv.addline(line);
 	}
 	resolv.startsolve(1, 1);
-	if (resolv.Determinator() != 0) {
+	if (resolv.Determinator() != (T)0) {
 		for (size_t i = 0; i < sec.lines; i++) {
 			for (size_t j = 0; j < sec.lines; j++) {
 				line[j] = resolv.main[i][j + sec.lines];

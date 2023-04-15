@@ -123,7 +123,7 @@ void Matrix<T>::show(ostream& output) {
 		output << "(";
 		for (size_t j = 0; j < width; j++) {
 			T elem = main[i][j];
-			if (elem == 0) {
+			if (elem == (T)0) {
 				output << "0";
 			}
 			else {
@@ -154,9 +154,9 @@ int Matrix<T>::searchforxline(size_t num) {
 	}
 	for (i = 0; i < height; i++) {
 		bad = 0;
-		if (main[i][num] != 0) {
+		if (main[i][num] != (T)0) {
 			for (size_t j = 0; j < num; j++) {
-				if (main[i][j] != 0) {
+				if (main[i][j] != (T)0) {
 					bad = 1;
 					break;
 				}
@@ -231,7 +231,7 @@ bool Matrix<T>::checkzeroerror(size_t rpart) {
 	for (size_t i = 0; i < height; i++) {
 		good = 1;
 		for (size_t j = 0; j < width - right_part; j++) {
-			if (main[i][j] != 0) {
+			if (main[i][j] != (T)0) {
 				good = 0;
 				break;
 			}
@@ -249,6 +249,9 @@ bool Matrix<T>::division(size_t to, T coef) {
 	if (to >= lines) {
 		return 1;
 	}
+	if (coef == (T)1) {
+		return 0;
+	}
 	if (coef) {
 		for (size_t i = 0; i < width; i++) {
 			main[to][i] /= coef;
@@ -264,6 +267,9 @@ template<typename T>
 bool Matrix<T>::summarize(size_t from, size_t to, T coef) {
 	from = from - 1;
 	to = to - 1;
+	if (coef == (T)0) {
+		return 0;
+	}
 	if (from >= lines || to >= lines) {
 		return 1;
 	}
@@ -292,20 +298,20 @@ void Matrix<T>::showfx(size_t rpart, ostream& output) {
 		if (xl != -1) {
 			for (size_t j = i + 1; j < width; j++) {
 				bool sgn;
-				if (main[xl][j] == 0 || ((j >= width - right_part) && j != width - right_part + rpart - 1)) {
+				if (main[xl][j] == (T)0 || ((j >= width - right_part) && j != width - right_part + rpart - 1)) {
 					continue;
 				}
 				if (empty) {
 					empty = 0;
 				}
-				sgn = main[xl][j] > 0 ? 1 : 0;
+				sgn = main[xl][j] > (T)0 ? 1 : 0;
 				if (j == width - right_part + rpart - 1) { // our rpart
 					sgndprint(first, sgn, output);
-					output << (2 * sgn - 1) * main[xl][j];
+					output << (main[xl][j] * ((T)(2 * sgn - 1)));
 				}
 				else {
 					sgndprint(first, !sgn, output);
-					output << (2 * sgn - 1) * main[xl][j] << "x" << j + 1;
+					output << (main[xl][j] * ((T)(2 * sgn - 1))) << "x" << j + 1;
 				}
 				first = 0;
 			}
