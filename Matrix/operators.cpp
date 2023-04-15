@@ -32,6 +32,30 @@ Matrix<T> Matrix<T>::operator*(const T& coef) {
 }
 
 template<typename T>
+Matrix<T> Matrix<T>::operator*(const Matrix<T> &sec) {
+	if (width-right_part != sec.lines) {
+		return *this;
+	}
+	size_t cols = sec.width - sec.right_part;
+	Matrix<T> res(height, cols);
+	res.holds = holds * sec.holds;
+	T *line = new T[cols];
+	T sum;
+	for (size_t i = 0; i < height; i++) {
+		for (size_t j = 0; j < cols; j++) {
+			sum = 0;
+			for (size_t k = 0; k < sec.lines; k++) {
+				sum += main[i][k] * sec.main[k][j];
+			}
+			line[j] = sum;
+		}
+		res.addline(line);
+	}
+	delete[] line;
+	return res;
+}
+
+template<typename T>
 Matrix<T> &Matrix<T>::operator=(const Matrix<T> &sec) {
 	if (solved != nullptr) {
 		delete[] solved;

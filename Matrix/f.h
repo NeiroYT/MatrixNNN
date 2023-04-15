@@ -12,27 +12,7 @@ void sgndprint(size_t first, size_t sgn);
 template<typename T>
 class Matrix {
 public:
-	Matrix(size_t w, size_t h, size_t right_part = 0) {
-		if (w == 0 || h == 0) {
-			w = 1; h = 1;
-		}
-		width = w;
-		height = h;
-		if (right_part < width) {
-			this->right_part = right_part;
-		}
-		else {
-			right_part = 0;
-		}
-		if (right_part == 0) {
-			width++;
-			this->right_part = 1;
-			autozero = 1;
-		}
-		solved = new bool[this->right_part];
-		main = new vector<T>[height];
-		isready = new bool[height];
-	}
+	Matrix(size_t w, size_t h, size_t right_part = 0, bool one = 0);
 	Matrix(const Matrix &c);
 	~Matrix() {
 		delete[] isready;
@@ -46,11 +26,16 @@ public:
 	bool checkzeroerror(size_t rpart);
 	bool summarize(size_t from, size_t to, T coef);
 	bool division(size_t to, T coef);
+	Matrix<T> transposed();
+	void killholds() {
+		holds = 1;
+	}
 	T Determinator();
 	//ops
 	Matrix<T> operator+(const Matrix &sec);
 	Matrix<T>& operator=(const Matrix<T> &sec);
 	Matrix<T> operator*(const T& coef);
+	Matrix<T> operator*(const Matrix<T> &sec);
 private:
 	void showfx(size_t rpart);
 	int searchforxline(size_t num);

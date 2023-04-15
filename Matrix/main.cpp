@@ -18,15 +18,15 @@ int main() {
 		for (int i = 0; i < h; i++) {
 			cout << "Line #" << i + 1 << ":\n";
 			for (int j = 0; j < w; j++) {
-				//templine[j] = rand() % 60;
-				cin >> templine[j];
+				templine[j] = rand() % 2;
+				//cin >> templine[j];
 			}
 			cout << "---\n";
 			m1.addline(templine);
 		}
 		delete[] templine;
-		Matrix<double> m2 = m1;
-		m2 = (m1 + m2) * 2;
+		Matrix<double> m2(w, h, rpart, 1);
+		m2 = m1 + m2;
 		m1.show();
 		cout << "\n...\n";
 		m2.show();

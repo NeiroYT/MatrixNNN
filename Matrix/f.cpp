@@ -1,6 +1,46 @@
 #include "f.h"
 
 // Matrix basic functions (not operators)
+
+template<typename T>
+Matrix<T>::Matrix(size_t w, size_t h, size_t right_part, bool one) {
+	if (w == 0 || h == 0) {
+		w = 1; h = 1;
+	}
+	width = w;
+	height = h;
+	if (right_part < width) {
+		this->right_part = right_part;
+	}
+	else {
+		right_part = 0;
+	}
+	if (right_part == 0) {
+		width++;
+		this->right_part = 1;
+		autozero = 1;
+	}
+	solved = new bool[this->right_part];
+	main = new vector<T>[height];
+	isready = new bool[height];
+	if (one) {
+		T *line = new T[width];
+		for (size_t j = 0; j < width; j++) {
+			line[j] = 0;
+		}
+		for (size_t i = 0; i < height; i++) {
+			if (i > 0) {
+				line[i - 1] = 0;
+			}
+			if (i < width - right_part) {
+				line[i] = 1;
+			}
+			addline(line);
+		}
+		delete[] line;
+	}
+}
+
 template<typename T>
 Matrix<T>::Matrix(const Matrix<T> &c) {
 	width = c.width;
@@ -51,7 +91,6 @@ T Matrix<T>::Determinator() {
 
 template<typename T>
 void Matrix<T>::addline(T *arr) {
-	T null = 0;
 	if (full) {
 		return;
 	}
@@ -60,7 +99,7 @@ void Matrix<T>::addline(T *arr) {
 		main[lines].push_back(arr[i]);
 	}
 	if (autozero) {
-		main[lines].push_back(null);
+		main[lines].push_back(0);
 	}
 	lines++;
 	if (lines == height) {
@@ -152,19 +191,22 @@ void Matrix<T>::startsolve(bool jord) {
 			}
 		}
 	}
-	show();
-	cout << '\n';
-	issolved = 1;
-	for (size_t i = 0; i < right_part; i++) {
-		solved[i] = !checkzeroerror(i + 1);
-		showfx(i + 1);
-	}
 	int tline;
 	for (size_t i = 0; i < width - right_part; i++) {
 		tline = searchforxline(i);
 		if (tline >= 0) {
 			swap(tline, i);
 		}
+	}
+	show();
+	cout << '\n';
+	issolved = 1;
+	for (size_t i = 0; i < right_part; i++) {
+		solved[i] = !checkzeroerror(i + 1);
+		if (solved[i] == 0) {
+			issolved = 0;
+		}
+		showfx(i + 1);
 	}
 }
 
@@ -278,4 +320,18 @@ void sgndprint(size_t first, size_t sgn) {
 	else if (!first && !sgn) {
 		cout << " - ";
 	}
+}
+
+template<typename T>
+Matrix<T> Matrix<T>::transposed() {
+	Matrix<T> res(lines, width-right_part);
+	T *line = new T[res.width];
+	for (size_t i = 0; i < res.height; i++) {
+		for (size_t j = 0; j < res.width-1; j++) {
+			line[j] = main[j][i];
+		}
+		res.addline(line);
+	}
+	delete[] line;
+	return res;
 }
