@@ -3,20 +3,19 @@
 #include <fstream>
 
 typedef unsigned long long int llu;
+typedef long long int ll;
 
 using namespace std;
 
 class Frac {
 public:
-	Frac(int numer, size_t denom) {
-		if (denom == 0) {
-			//throw 1;
-		}
-		else {
-			this->numer = numer;
-			this->denom = denom;
-			simpl();
-		}
+	Frac(ll numer, llu denom) {
+		//if (denom == 0) {
+		//	throw 1;
+		//}
+		this->numer = numer;
+		this->denom = denom;
+		simpl();
 	}
 	Frac() {}
 	Frac(int _num) : numer(_num) {}
@@ -28,16 +27,16 @@ public:
 		denom = c.denom;
 	}
 	~Frac() {}
-	int get_numer() {
+	ll get_numer() {
 		return numer;
 	}
-	size_t get_denom() {
+	llu get_denom() {
 		return denom;
 	}
-	void set_numer(int to) {
+	void set_numer(ll to) {
 		numer = to;
 	}
-	void set_denom(size_t to) {
+	void set_denom(llu to) {
 		if (to != 0) {
 			denom = to;
 		}
@@ -70,12 +69,20 @@ public:
 	bool operator!=(const Frac &sec) { return numer * sec.denom != sec.numer * denom; }
 	bool operator<=(const Frac &sec) { return numer * sec.denom <= sec.numer * denom; }
 	bool operator<(const Frac &sec) { return numer * sec.denom < sec.numer * denom; }
-	bool operator>(const Frac &sec) { return numer * sec.denom > sec.numer * denom; }
+	bool operator>(const Frac &sec) {
+		if (sec.numer == 0) {
+			return (numer * sec.denom > 0);
+		}
+		if (numer == 0) {
+			return (sec.numer * denom < 0);
+		}
+		return (numer * sec.denom > sec.numer * denom);
+	}
 	bool operator>=(const Frac &sec) { return numer * sec.denom >= sec.numer * denom; }
 	bool operator&&(const Frac &sec) { return numer && sec.numer; }
 	Frac operator-() { return Frac(-numer, denom); }
 private:
 	void simpl();
-	int numer = 0;
-	size_t denom = 1;
+	ll numer = 0;
+	llu denom = 1;
 };

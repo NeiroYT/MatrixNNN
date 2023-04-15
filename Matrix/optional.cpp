@@ -1,9 +1,9 @@
 #include "optional.h"
 
 void Frac::simpl() {
-	size_t rec;
-	size_t s1 = numer >= 0 ? numer : -numer;
-	size_t s2 = denom;
+	llu rec;
+	llu s1 = numer >= 0 ? numer : -numer;
+	llu s2 = denom;
 	if (denom == 1 || denom == 0) {
 		return;
 	}
@@ -13,7 +13,7 @@ void Frac::simpl() {
 		s2 = rec;
 	} while (rec != 0);
 	// s1 - gcd
-	numer /= (int)s1;
+	numer /= (ll)s1;
 	denom /= s1;
 }
 
@@ -42,7 +42,7 @@ Frac Frac::operator-(const Frac &sec) {
 }
 
 Frac Frac::operator/(const Frac &sec) {
-	int abnumer;
+	ll abnumer;
 	Frac res;
 	res.numer = numer * sec.denom;
 	if (sec.numer < 0) {
@@ -79,7 +79,7 @@ Frac &Frac::operator/=(const Frac &sec) {
 	if (numer == 0) {
 		return *this;
 	}
-	int abnumer = sec.numer < 0 ? -sec.numer : sec.numer;
+	ll abnumer = sec.numer < 0 ? -sec.numer : sec.numer;
 	numer *= sec.denom;
 	if (sec.numer < 0) {
 		numer *= -1;

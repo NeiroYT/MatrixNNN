@@ -31,7 +31,7 @@ int main() {
 		}
 		delete[] templine;
 		Matrix<Frac> m2(w, h, rpart, 1);
-		m2 = ((Frac)1 / m1);
+		m2 = m1;
 		m1.show(file);
 		file << "\n...\n";
 		m2.show(file);
@@ -46,7 +46,7 @@ int main() {
 		time = clock() - time;
 		file << time << "ms for " << w << "x" << h << '\n';
 		time = clock();
-		m2.startsolve(1, 0, file);
+		m2.startsolve(0, 0, file);
 		time = clock() - time;
 		file << time << "ms for " << w << "x" << h << '\n';
 		file.flush();
