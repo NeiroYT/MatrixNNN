@@ -1,6 +1,8 @@
 #include "f.h"
 #include "optional.h"
 
+typedef Frac INP;
+
 int main() {
 	srand(time(NULL));
 	clock_t time;
@@ -16,22 +18,22 @@ int main() {
 		cout << "Count of right parts: ";
 		cin >> rpart;
 		w += rpart;
-		Matrix<Frac> m1(w, h, rpart);
-		Frac *templine = new Frac[w];
+		Matrix<INP> m1(w, h, rpart);
+		INP *templine = new INP[w];
 		int a;
 		for (size_t i = 0; i < h; i++) {
 			cout << "Line #" << i + 1 << ":\n";
 			for (size_t j = 0; j < w; j++) {
-				templine[j] = rand() % 10;
-				//cin >> a;
-				//templine[j] = a;
+				//templine[j] = rand() % 10;
+				cin >> a;
+				templine[j] = a;
 			}
 			cout << "---\n";
 			m1.addline(templine);
 		}
 		delete[] templine;
-		Matrix<Frac> m2(w, h, rpart, 1);
-		m2 = m1;
+		Matrix<INP> m2(w, h, rpart, 1);
+		m2 = (INP)1/m1;
 		m1.show(file);
 		file << "\n...\n";
 		m2.show(file);
@@ -46,7 +48,7 @@ int main() {
 		time = clock() - time;
 		file << time << "ms for " << w << "x" << h << '\n';
 		time = clock();
-		m2.startsolve(0, 0, file);
+		m2.startsolve(1, 0, file);
 		time = clock() - time;
 		file << time << "ms for " << w << "x" << h << '\n';
 		file.flush();

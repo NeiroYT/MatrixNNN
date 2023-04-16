@@ -65,20 +65,12 @@ public:
 		return *this;
 	}
 	Frac &operator/=(const Frac &sec);
-	bool operator==(const Frac &sec) { return numer * sec.denom == sec.numer * denom; }
-	bool operator!=(const Frac &sec) { return numer * sec.denom != sec.numer * denom; }
-	bool operator<=(const Frac &sec) { return numer * sec.denom <= sec.numer * denom; }
-	bool operator<(const Frac &sec) { return numer * sec.denom < sec.numer * denom; }
-	bool operator>(const Frac &sec) {
-		if (sec.numer == 0) {
-			return (numer * sec.denom > 0);
-		}
-		if (numer == 0) {
-			return (sec.numer * denom < 0);
-		}
-		return (numer * sec.denom > sec.numer * denom);
-	}
-	bool operator>=(const Frac &sec) { return numer * sec.denom >= sec.numer * denom; }
+	bool operator==(const Frac &sec) { return numer * (ll)sec.denom == sec.numer * (ll)denom; }
+	bool operator!=(const Frac &sec) { return numer * (ll)sec.denom != sec.numer * (ll)denom; }
+	bool operator<=(const Frac &sec) { return numer * (ll)sec.denom <= sec.numer * (ll)denom; }
+	bool operator<(const Frac &sec) { return numer * (ll)sec.denom < sec.numer * (ll)denom; }
+	bool operator>(const Frac &sec) { return numer * (ll)sec.denom > sec.numer * (ll)denom; }
+	bool operator>=(const Frac &sec) { return numer * (ll)sec.denom >= sec.numer * (ll)denom; }
 	bool operator&&(const Frac &sec) { return numer && sec.numer; }
 	Frac operator-() { return Frac(-numer, denom); }
 private:
