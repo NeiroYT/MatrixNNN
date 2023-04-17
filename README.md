@@ -3,6 +3,7 @@ Basic Augmented matrix operations
 
 ### Usage
 
+*f.cpp and operators.cpp are excluded from VC solution*
 `T - template type (int/double/fractions/etc.)`  
 There's `+, =, *, /, [], <<` operators  
 `/` finds inverse matrix for second matrix and then multiplies first by second  
