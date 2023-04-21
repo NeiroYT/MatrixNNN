@@ -1,5 +1,7 @@
 #include "optional.h"
 
+const bool precise = 1;
+
 void Frac::simpl() {
 	llu rec;
 	llu s1 = numer >= 0 ? numer : -numer;
@@ -15,6 +17,13 @@ void Frac::simpl() {
 	// s1 - gcd
 	numer /= (ll)s1;
 	denom /= s1;
+	if (!precise && ((abs(numer) > 10000000LL) || (denom > 10000000LL))) {
+		long double tmp = (long double)numer / denom;
+		tmp *= 100000;
+		numer = (ll)(tmp + 0.5);
+		denom = (llu)100000;
+		cout << "Value loss\n";
+	}
 }
 
 Frac Frac::operator*(const Frac &sec) {
@@ -97,14 +106,4 @@ ostream &operator<<(ostream &output, const Frac &m) {
 		output << m.numer << '/' << m.denom;
 	}
 	return output;
-}
-
-bool operator&&(const bool &a, const Frac &b) {
-	return (a && (b.numer != 0));
-}
-
-Frac operator*(int &a, const Frac &b) {
-	Frac res = b;
-	res *= a;
-	return res;
 }

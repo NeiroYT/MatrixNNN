@@ -4,6 +4,11 @@
 
 template<typename T>
 Matrix<T>::Matrix(size_t w, size_t h, size_t right_part, bool one) {
+	full = 0;
+	lines = 0;
+	autozero = 0;
+	holds = 1;
+	issolved = 0;
 	if (w == 0 || h == 0) {
 		w = 1; h = 1;
 	}
@@ -42,13 +47,19 @@ Matrix<T>::Matrix(size_t w, size_t h, size_t right_part, bool one) {
 }
 
 template<typename T>
-Matrix<T>::Matrix(T num) {
+Matrix<T>::Matrix(const T& num) {
 	Matrix<T> tocopy(1, 1, 0, 1);
+	solved = nullptr;
+	main = nullptr;
+	isready = nullptr;
 	*this = tocopy * num;
 }
 
 template<typename T>
 Matrix<T>::Matrix(const Matrix<T> &c) {
+	full = 0;
+	lines = 0;
+	holds = 1;
 	width = c.width;
 	height = c.lines;
 	right_part = c.right_part;
@@ -123,7 +134,7 @@ void Matrix<T>::show(ostream& output) {
 		output << "(";
 		for (size_t j = 0; j < width; j++) {
 			T elem = main[i][j];
-			if (elem == (T)0) {
+			if (elem == 0) {
 				output << "0";
 			}
 			else {
@@ -154,9 +165,9 @@ int Matrix<T>::searchforxline(size_t num) {
 	}
 	for (i = 0; i < height; i++) {
 		bad = 0;
-		if (main[i][num] != (T)0) {
+		if (main[i][num] != 0) {
 			for (size_t j = 0; j < num; j++) {
-				if (main[i][j] != (T)0) {
+				if (main[i][j] != 0) {
 					bad = 1;
 					break;
 				}
@@ -182,7 +193,7 @@ void Matrix<T>::startsolve(bool jord, bool quiet, ostream& output) {
 	for (size_t p = 0; p < width - right_part; p++) {
 		for (size_t q = 0; q < height; q++) {
 			T elem = main[q][p];
-			if (!isready[q] && elem) {
+			if (!isready[q] && (elem != 0)) {
 				errcheck = division(q + 1, elem);
 				holds *= elem;
 				for (size_t t = q*(!jord); t < height; t++) {
@@ -231,12 +242,12 @@ bool Matrix<T>::checkzeroerror(size_t rpart) {
 	for (size_t i = 0; i < height; i++) {
 		good = 1;
 		for (size_t j = 0; j < width - right_part; j++) {
-			if (main[i][j] != (T)0) {
+			if (main[i][j] != 0) {
 				good = 0;
 				break;
 			}
 		}
-		if (good && main[i][width - right_part + rpart - 1]) {
+		if (good && (main[i][width - right_part + rpart - 1] != 0)) {
 			return 1;
 		}
 	}
@@ -249,10 +260,10 @@ bool Matrix<T>::division(size_t to, T coef) {
 	if (to >= lines) {
 		return 1;
 	}
-	if (coef == (T)1) {
+	if (coef == 1) {
 		return 0;
 	}
-	if (coef) {
+	if (coef != 0) {
 		for (size_t i = 0; i < width; i++) {
 			main[to][i] /= coef;
 		}
@@ -267,7 +278,7 @@ template<typename T>
 bool Matrix<T>::summarize(size_t from, size_t to, T coef) {
 	from = from - 1;
 	to = to - 1;
-	if (coef == (T)0) {
+	if (coef == 0) {
 		return 0;
 	}
 	if (from >= lines || to >= lines) {
@@ -298,20 +309,20 @@ void Matrix<T>::showfx(size_t rpart, ostream& output) {
 		if (xl != -1) {
 			for (size_t j = i + 1; j < width; j++) {
 				bool sgn;
-				if (main[xl][j] == (T)0 || ((j >= width - right_part) && j != width - right_part + rpart - 1)) {
+				if (main[xl][j] == 0 || ((j >= width - right_part) && j != width - right_part + rpart - 1)) {
 					continue;
 				}
 				if (empty) {
 					empty = 0;
 				}
-				sgn = main[xl][j] > (T)0 ? 1 : 0;
+				sgn = main[xl][j] > 0 ? 1 : 0;
 				if (j == width - right_part + rpart - 1) { // our rpart
 					sgndprint(first, sgn, output);
-					output << (main[xl][j] * ((T)(2 * sgn - 1)));
+					output << (main[xl][j] * (2 * sgn - 1));
 				}
 				else {
 					sgndprint(first, !sgn, output);
-					output << (main[xl][j] * ((T)(2 * sgn - 1))) << "x" << j + 1;
+					output << (main[xl][j] * (2 * sgn - 1)) << "x" << j + 1;
 				}
 				first = 0;
 			}

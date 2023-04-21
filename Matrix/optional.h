@@ -10,17 +10,19 @@ using namespace std;
 class Frac {
 public:
 	Frac(ll numer, llu denom) {
-		//if (denom == 0) {
-		//	throw 1;
-		//}
+		if (denom == 0) {
+			cout << "Overflow\n"; // debug
+		}
 		this->numer = numer;
 		this->denom = denom;
 		simpl();
 	}
-	Frac() {}
-	Frac(int _num) : numer(_num) {}
-	operator bool() {
-		return numer != 0;
+	Frac() {
+		numer = 0;
+		denom = 1;
+	}
+	Frac(int _num) : numer(_num) {
+		denom = 1;
 	}
 	Frac(const Frac &c) {
 		numer = c.numer;
@@ -43,7 +45,6 @@ public:
 	}
 	// ops
 	friend ostream &operator<<(ostream &output, const Frac &m);
-	friend bool operator&&(const bool &a, const Frac &b);
 	Frac &operator=(const Frac &sec) {
 		numer = sec.numer;
 		denom = sec.denom;
@@ -75,6 +76,6 @@ public:
 	Frac operator-() { return Frac(-numer, denom); }
 private:
 	void simpl();
-	ll numer = 0;
-	llu denom = 1;
+	ll numer;
+	llu denom;
 };

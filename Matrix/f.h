@@ -14,7 +14,7 @@ template<typename T>
 class Matrix {
 public:
 	Matrix(size_t w, size_t h, size_t right_part = 0, bool one = 0);
-	Matrix(T num);
+	Matrix(const T& num);
 	Matrix(const Matrix &c);
 	~Matrix() {
 		delete[] isready;
@@ -55,16 +55,17 @@ public:
 private:
 	void showfx(size_t rpart, ostream& output);
 	int searchforxline(size_t num);
-	bool full = 0;
-	bool *solved = nullptr;
-	bool *isready = nullptr;
-	vector<T> *main = nullptr;
-	size_t width = 0; size_t height = 0;
-	size_t right_part = 1;
-	size_t lines = 0;
-	bool autozero = 0;
-	T holds = 1;
-	bool issolved = 0;
+	bool full;
+	bool *solved;
+	bool *isready;
+	vector<T> *main;
+	size_t width;
+	size_t height;
+	size_t right_part;
+	size_t lines;
+	bool autozero;
+	T holds;
+	bool issolved;
 };
 
 template<typename T>
