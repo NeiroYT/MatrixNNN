@@ -85,5 +85,5 @@ T Determinator();
 void killholds();
 ```
 ## Fraction class
-A lot of operators, but your const int should be converted like (Frac)1 or (Frac)0 (which converted to 1/1 and 0/1)  
-Overflows easily in big matrices  
+A lot of operators.
+Overflows easily in big matrices (10x10 or bigger)  
