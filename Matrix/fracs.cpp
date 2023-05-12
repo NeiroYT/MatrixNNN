@@ -1,4 +1,4 @@
-#include "optional.h"
+#include "fracs.h"
 
 const bool precise = 1;
 
@@ -17,6 +17,7 @@ void Frac::simpl() {
 	// s1 - gcd
 	numer /= (ll)s1;
 	denom /= s1;
+	// if not to be precise
 	if (!precise && ((abs(numer) > 10000000LL) || (denom > 10000000LL))) {
 		long double tmp = (long double)numer / denom;
 		tmp *= 100000;

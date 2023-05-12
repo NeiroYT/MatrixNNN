@@ -50,10 +50,6 @@ public:
 		denom = sec.denom;
 		return *this;
 	}
-	Frac &operator=(const int &sec) {
-		numer = sec;
-		return *this;
-	}
 	Frac operator*(const Frac &sec);
 	Frac operator/(const Frac &sec);
 	Frac operator+(const Frac &sec);
@@ -61,10 +57,6 @@ public:
 	Frac &operator+=(const Frac &sec);
 	Frac &operator-=(const Frac &sec);
 	Frac &operator*=(const Frac &sec);
-	Frac &operator*=(const int a) {
-		numer *= a;
-		return *this;
-	}
 	Frac &operator/=(const Frac &sec);
 	bool operator==(const Frac &sec) { return numer * (ll)sec.denom == sec.numer * (ll)denom; }
 	bool operator!=(const Frac &sec) { return numer * (ll)sec.denom != sec.numer * (ll)denom; }
@@ -72,10 +64,18 @@ public:
 	bool operator<(const Frac &sec) { return numer * (ll)sec.denom < sec.numer * (ll)denom; }
 	bool operator>(const Frac &sec) { return numer * (ll)sec.denom > sec.numer * (ll)denom; }
 	bool operator>=(const Frac &sec) { return numer * (ll)sec.denom >= sec.numer * (ll)denom; }
-	bool operator&&(const Frac &sec) { return numer && sec.numer; }
 	Frac operator-() { return Frac(-numer, denom); }
 private:
 	void simpl();
 	ll numer;
 	llu denom;
 };
+
+/*
+what should be in a class:
+
+ostream& operator<<(class obj)
+
+= ,*, /, +=, *=, /=, !=, ==, >
+
+*/

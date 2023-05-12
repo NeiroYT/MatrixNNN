@@ -1,4 +1,4 @@
-#include "f.h"
+#include "matrix.h"
 
 template<typename T>
 Matrix<T> Matrix<T>::operator+(const Matrix<T> &sec) {
@@ -33,10 +33,10 @@ Matrix<T> Matrix<T>::operator*(const T& coef) {
 
 template<typename T>
 Matrix<T> Matrix<T>::operator*(Matrix<T> &sec) {
-	Matrix<T> *anoth;
-	Matrix<T> thr(sec.width - sec.right_part, sec.width - sec.right_part, 0, 1);
+	Matrix<T> *anoth; // this
+	Matrix<T> thr(sec.width - sec.right_part, sec.width - sec.right_part, 0, 1); // special case E matrix
 	anoth = this;
-	if ((width - right_part) == 1 && height == 1) {
+	if ((width - right_part) == 1 && height == 1) { // special case if 1x1 matrix
 		thr = thr * main[0][0];
 		anoth = &thr;
 	}
@@ -44,7 +44,7 @@ Matrix<T> Matrix<T>::operator*(Matrix<T> &sec) {
 		return *this;
 	}
 	size_t cols = sec.width - sec.right_part;
-	Matrix<T> res(anoth->height, cols);
+	Matrix<T> res(cols, anoth->height);
 	res.holds = anoth->holds * sec.holds;
 	T *line = new T[cols];
 	T sum;
@@ -112,7 +112,7 @@ Matrix<T> Matrix<T>::operator/(Matrix<T> &sec) {
 		resolv.addline(line);
 	}
 	resolv.startsolve(1, 1);
-	if (resolv.Determinator() != (T)0) {
+	if (resolv.Determinator() != 0) {
 		for (size_t i = 0; i < sec.lines; i++) {
 			for (size_t j = 0; j < sec.lines; j++) {
 				line[j] = resolv.main[i][j + sec.lines];

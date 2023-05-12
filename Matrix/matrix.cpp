@@ -1,4 +1,4 @@
-#include "f.h"
+#include "matrix.h"
 
 // Matrix basic functions (not operators)
 
@@ -102,7 +102,7 @@ T Matrix<T>::Determinator() {
 		return 0;
 	}
 	for (size_t i = 0; i < width - right_part; i++) {
-		if (searchforxline(i) == -1) {
+		if (searchforusableline(i) == -1) {
 			return 0;
 		}
 	}
@@ -157,16 +157,16 @@ void Matrix<T>::show(ostream& output) {
 }
 
 template<typename T>
-int Matrix<T>::searchforxline(size_t num) {
+int Matrix<T>::searchforusableline(size_t col) {
 	size_t i;
 	bool bad;
-	if (num > width - right_part) {
+	if (col > width - right_part) {
 		return -1;
 	}
 	for (i = 0; i < height; i++) {
 		bad = 0;
-		if (main[i][num] != 0) {
-			for (size_t j = 0; j < num; j++) {
+		if (main[i][col] != 0) {
+			for (size_t j = 0; j < col; j++) {
 				if (main[i][j] != 0) {
 					bad = 1;
 					break;
@@ -192,6 +192,7 @@ void Matrix<T>::startsolve(bool jord, bool quiet, ostream& output) {
 	}
 	for (size_t p = 0; p < width - right_part; p++) {
 		for (size_t q = 0; q < height; q++) {
+			// todo add boolean
 			T elem = main[q][p];
 			if (!isready[q] && (elem != 0)) {
 				errcheck = division(q + 1, elem);
@@ -213,7 +214,7 @@ void Matrix<T>::startsolve(bool jord, bool quiet, ostream& output) {
 	}
 	int tline;
 	for (size_t i = 0; i < width - right_part; i++) {
-		tline = searchforxline(i);
+		tline = searchforusableline(i);
 		if (tline >= 0) {
 			swap(tline, i);
 		}
@@ -304,7 +305,7 @@ void Matrix<T>::showfx(size_t rpart, ostream& output) {
 	for (size_t i = 0; i < width - right_part; i++) {
 		empty = 1;
 		first = 1;
-		xl = searchforxline(i);
+		xl = searchforusableline(i);
 		output << "x" << i + 1 << " = ";
 		if (xl != -1) {
 			for (size_t j = i + 1; j < width; j++) {
