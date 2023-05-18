@@ -3,12 +3,54 @@
 #include <cstdlib>
 #include <vector>
 #include <ctime>
-#include <iomanip>
 #include <fstream>
 
 using namespace std;
 
 void sgndprint(size_t first, size_t sgn, ostream& output = cout);
+
+template<typename T>
+class Vector {
+public:
+	Vector(size_t n) {
+		if (n != 0) {
+			main = new T[n];
+			coords = n;
+		}
+		else {
+			main = nullptr;
+			coords = 0;
+		}
+	}
+	~Vector() {
+		delete[] main;
+	}
+	Vector(const Vector &c) {
+		if (c.coords != 0) {
+			main = new T[c.coords];
+			for (size_t i = 0; i < c.coords; i++) {
+				main[i] = c.main[i];
+			}
+			coords = c.coords;
+		}
+	}
+	T &operator[](size_t i) {
+		if (i < coords) {
+			return main[i];
+		}
+	}
+	void show(ostream& output = cout) {
+		output << '(';
+		for (size_t i = 0; i < coords-1; i++) {
+			output << main[i] << ' ';
+		}
+		output << main[coords - 1] << ")\n";
+		output.flush();
+	}
+private:
+	T *main;
+	size_t coords;
+};
 
 template<typename T>
 class Matrix {
@@ -29,6 +71,7 @@ public:
 	bool summarize(size_t from, size_t to, T coef); // Summarize lines, starts from 1
 	bool division(size_t to, T coef); // Divide line by coef, line starts from 1
 	Matrix<T> transposed();
+	Vector<T> getvec(size_t num); // starts from 1
 	void killholds() {
 		holds = 1;
 	}
@@ -55,17 +98,18 @@ public:
 private:
 	void showfx(size_t rpart, ostream& output);
 	int searchforusableline(size_t num);
+	size_t funcline(size_t w);
 	bool full;
 	bool *solved;
 	bool *isready;
+	bool issolved;
+	bool autozero;
 	vector<T> *main;
+	size_t lines;
 	size_t width;
 	size_t height;
 	size_t right_part;
-	size_t lines;
-	bool autozero;
 	T holds;
-	bool issolved;
 };
 
 template<typename T>
@@ -77,6 +121,23 @@ ostream& operator<<(ostream &output, Matrix<T> &m) {
 template<typename T>
 inline Matrix<T> operator/(T frst, Matrix<T> sec) {
 	return (Matrix<T>)frst / sec;
+}
+
+template<typename T>
+size_t Matrix<T>::funcline(size_t w) {
+	size_t maxline = height;
+	for (size_t i = 0; i < height; i++) {
+		if (isready[i] == 0) {
+			maxline = i;
+			break;
+		}
+	}
+	for (size_t i = maxline; i < height; i++) {
+		if (main[i][w] > main[maxline][w] && isready[i] == 0) {
+			maxline = i;
+		}
+	}
+	return maxline;
 }
 
 #include "matrix.cpp"

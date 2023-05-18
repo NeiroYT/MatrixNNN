@@ -28,10 +28,12 @@ int main() {
 		file << "\nAnswers:\n";
 		time = clock();
 		m1.startsolve(1, 0, file);
+		m1.getvec(1).show(file);
 		time = clock() - time;
 		file << time << "ms for " << m1.get_width() << "x" << m1.get_height() << '\n';
 		time = clock();
 		m2.startsolve(1, 0, file);
+		m2.getvec(1).show(file);
 		time = clock() - time;
 		file << time << "ms for " << m2.get_width() << "x" << m2.get_height() << '\n';
 		file.flush();
@@ -43,6 +45,7 @@ int main() {
 Matrix<INP> mainchoice() {
 	size_t w, h, rpart;
 	int choice2;
+	int choice3 = 0;
 	cout << "Width (amount of Xs): ";
 	cin >> w;
 	cout << "Height: ";
@@ -51,6 +54,8 @@ Matrix<INP> mainchoice() {
 	cin >> rpart;
 	cout << "Random? ";
 	cin >> choice2;
+	cout << "Q field? ";
+	cin >> choice3;
 	w += rpart;
 	Matrix<INP> m1(w, h, rpart);
 	INP *templine = new INP[w];
@@ -60,13 +65,18 @@ Matrix<INP> mainchoice() {
 		cout << "Line #" << i + 1 << ":\n";
 		for (size_t j = 0; j < w; j++) {
 			if (choice2 == 1) {
-				templine[j] = rand() % 10;
+				if (choice3) {
+					templine[j] = (INP)Frac(rand() % 10, rand() % 9 + 1);
+				}
+				else {
+					templine[j] = rand() % 10;
+				}
 			}
 			else {
 				cin >> a;
-				if (typeid(INP) == typeid(Frac) && a != 0) {
+				if (choice3 && a != 0) {
 					cin >> b;
-					templine[j] = Frac(a, b);
+					templine[j] = (INP)Frac(a, b);
 				}
 				else {
 					templine[j] = a;

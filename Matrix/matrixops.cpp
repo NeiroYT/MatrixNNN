@@ -89,7 +89,6 @@ Matrix<T> &Matrix<T>::operator=(const Matrix<T> &sec) {
 	}
 	for (size_t i = 0; i < height; i++) {
 		addline(&sec.main[i][0]);
-		isready[i] = sec.isready[i];
 	}
 	return *this;
 }

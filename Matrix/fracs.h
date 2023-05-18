@@ -28,6 +28,9 @@ public:
 		numer = c.numer;
 		denom = c.denom;
 	}
+	explicit operator double() {
+		return (double)numer / denom;
+	}
 	~Frac() {}
 	ll get_numer() {
 		return numer;

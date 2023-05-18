@@ -182,7 +182,6 @@ int Matrix<T>::searchforusableline(size_t col) {
 
 template<typename T>
 void Matrix<T>::startsolve(bool jord, bool quiet, ostream& output) {
-	bool *isready = new bool[height];
 	bool errcheck;
 	if (!full) {
 		return;
@@ -190,15 +189,16 @@ void Matrix<T>::startsolve(bool jord, bool quiet, ostream& output) {
 	for (size_t i = 0; i < height; i++) {
 		isready[i] = 0;
 	}
+	size_t check;
 	for (size_t p = 0; p < width - right_part; p++) {
+		check = funcline(p);
 		for (size_t q = 0; q < height; q++) {
-			// todo add boolean
 			T elem = main[q][p];
-			if (!isready[q] && (elem != 0)) {
+			if (!isready[q] && (elem != 0) && (q == check)) {
 				errcheck = division(q + 1, elem);
 				holds *= elem;
 				for (size_t t = q*(!jord); t < height; t++) {
-					if (t != q) {
+					if (t != q && main[t][p] != 0) {
 						T coef1 = -main[t][p];
 						errcheck = errcheck || summarize(q + 1, t + 1, coef1);
 					}
@@ -364,5 +364,21 @@ Matrix<T> Matrix<T>::transposed() {
 		res.addline(line);
 	}
 	delete[] line;
+	return res;
+}
+
+template<typename T>
+Vector<T> Matrix<T>::getvec(size_t num) {
+	size_t count = 0;
+	for (size_t i = 0; i < height; i++) {
+		count += isready[i];
+	}
+	if (count != width - right_part || num == 0 || num > right_part) {
+		return Vector<T>(1);
+	}
+	Vector<T> res(count);
+	for (size_t i = 0; i < count; i++) {
+		res[i] = main[i][count + num - 1];
+	}
 	return res;
 }
