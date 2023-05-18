@@ -1,5 +1,7 @@
 #include "matrix.h"
 #include "fracs.h"
+#include <cstdlib>
+#include <ctime>
 
 typedef Frac INP;
 
