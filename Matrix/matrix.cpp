@@ -30,13 +30,12 @@ Matrix<T>::Matrix(size_t w, size_t h, size_t right_part, bool one) {
 	isready = new bool[height];
 	if (one) {
 		T *line = new T[width];
-		for (size_t j = 0; j < width; j++) {
+		line[0] = 1;
+		for (size_t j = 1; j < width; j++) {
 			line[j] = 0;
 		}
-		for (size_t i = 0; i < height; i++) {
-			if (i > 0) {
-				line[i - 1] = 0;
-			}
+		for (size_t i = 1; i < height; i++) {
+			line[i - 1] = 0;
 			if (i < width - right_part) {
 				line[i] = 1;
 			}
@@ -280,19 +279,14 @@ bool Matrix<T>::checkzeroerror(size_t rpart) {
 template<typename T>
 bool Matrix<T>::division(size_t to, T coef) {
 	to = to - 1;
-	if (to >= lines) {
+	if (to >= lines || coef == 0) {
 		return 1;
 	}
 	if (coef == 1) {
 		return 0;
 	}
-	if (coef != 0) {
-		for (size_t i = 0; i < width; i++) {
-			main[to][i] /= coef;
-		}
-	}
-	else {
-		return 1;
+	for (size_t i = 0; i < width; i++) {
+		main[to][i] /= coef;
 	}
 	return 0;
 }

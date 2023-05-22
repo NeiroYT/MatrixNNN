@@ -5,8 +5,9 @@ Matrix<T> Matrix<T>::operator+(const Matrix<T> &sec) {
 	if (width - right_part != sec.width - sec.right_part || lines != sec.lines) {
 		return *this;
 	}
-	Matrix<T> res = right_part >= sec.right_part ? *this : sec;
-	const Matrix<T> &anoth = right_part >= sec.right_part ? sec : *this;
+	bool tmp = right_part >= sec.right_part;
+	Matrix<T> res = tmp ? *this : sec;
+	const Matrix<T> &anoth = tmp ? sec : *this;
 	for (size_t i = 0; i < res.right_part; i++) {
 		res.solved[i] = 0;
 	}

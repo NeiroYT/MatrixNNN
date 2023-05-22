@@ -80,5 +80,6 @@ what should be in a class:
 ostream& operator<<(class obj)
 
 = ,*, /, +=, *=, /=, !=, ==, >
+int->class
 
 */

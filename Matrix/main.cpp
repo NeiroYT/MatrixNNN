@@ -16,10 +16,10 @@ int main() {
 	while (true) {
 		Matrix<INP> m1 = mainchoice();
 		Matrix<INP> m2(0, 0);
-		//Matrix<INP> m2 = mainchoice();
-		m2 = (INP)1 / m1;
-		//m2 = m1 * m2;
-		m1.show(file);
+		//Matrix<INP> m2 = mainchoice(); // 2
+		m2 = (INP)1 / m1; // 1
+		//m2 = m1 * m2; // 2
+		m1.show(file); // 1
 		file << "\n...\n";
 		m2.show(file);
 		cout << "Confirm? (Y/N)\n";
