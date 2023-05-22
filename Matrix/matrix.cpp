@@ -79,6 +79,28 @@ Matrix<T>::Matrix(const Matrix<T> &c) {
 }
 
 template<typename T>
+Matrix<T>::Matrix(Matrix &&sec) {
+	isready = sec.isready;
+	main = sec.main;
+	solved = sec.solved;
+	width = sec.width;
+	height = sec.lines;
+	right_part = sec.right_part;
+	autozero = sec.autozero;
+	holds = sec.holds;
+	full = sec.full;
+	lines = sec.lines;
+	issolved = sec.issolved;
+	sec.isready = nullptr;
+	sec.main = nullptr;
+	sec.solved = nullptr;
+	sec.width = 0;
+	sec.height = 0;
+	sec.lines = 0;
+	sec.right_part = 0;
+}
+
+template<typename T>
 bool Matrix<T>::swap(size_t l1, size_t l2) {
 	T buf;
 	if (l1 == l2) {

@@ -31,6 +31,16 @@ public:
 			}
 			coords = c.coords;
 		}
+		else {
+			main = nullptr;
+			coords = 0;
+		}
+	}
+	Vector(Vector &&sec) {
+		main = sec.main;
+		coords = sec.coords;
+		sec.main = nullptr;
+		sec.coords = 0;
 	}
 	T &operator[](size_t i) {
 		if (i < coords) {
@@ -56,6 +66,7 @@ public:
 	Matrix(size_t w, size_t h, size_t right_part = 0, bool one = 0); // w includes right_part
 	Matrix(const T& num);
 	Matrix(const Matrix &c);
+	Matrix(Matrix &&sec);
 	~Matrix() {
 		delete[] isready;
 		delete[] main;
