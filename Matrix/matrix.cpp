@@ -34,6 +34,7 @@ Matrix<T>::Matrix(size_t w, size_t h, size_t right_part, bool one) {
 		for (size_t j = 1; j < width; j++) {
 			line[j] = 0;
 		}
+		addline(line);
 		for (size_t i = 1; i < height; i++) {
 			line[i - 1] = 0;
 			if (i < width - right_part) {
@@ -78,7 +79,7 @@ Matrix<T>::Matrix(const Matrix<T> &c) {
 }
 
 template<typename T>
-Matrix<T>::Matrix(Matrix &&sec) {
+Matrix<T>::Matrix(Matrix<T> &&sec) {
 	isready = sec.isready;
 	main = sec.main;
 	solved = sec.solved;
