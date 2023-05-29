@@ -142,7 +142,9 @@ size_t Matrix<T>::funcline(size_t w) {
 		}
 	}
 	for (size_t i = maxline; i < height; i++) {
-		if (main[i][w] > main[maxline][w] && isready[i] == 0) {
+		T el1 = main[i][w] > 0 ? main[i][w] : -main[i][w];
+		T el2 = main[maxline][w] > 0 ? main[maxline][w] : -main[maxline][w];
+		if (el1 > el2 && isready[i] == 0) {
 			maxline = i;
 		}
 	}
